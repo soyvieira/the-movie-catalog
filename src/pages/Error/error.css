@@ -1,13 +1,13 @@
 .not-found{
   width: 100%;
-
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column; /* deixa um embaixo do outro */
+  flex-direction: column; 
 }
 .not-found h1{
   font-size: 50px;
+  padding-top: 40px;
 }
 .not-found h2{
   font-size: 20px;
