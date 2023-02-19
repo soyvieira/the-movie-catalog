@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from '../../services/api';
 import './movie.css';
 
 function Movie(){
   const {id} = useParams();
+  const navigation = useNavigate();
   const [movies, setMovies] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -22,12 +23,32 @@ function Movie(){
       })
       .catch( ()=>{
         console.log("Movie not found");
+        navigation('/', {replace: true});
+        return
       })
     }
 
     loadMovies();
 
-}, [])
+}, [id, navigation])
+
+  function saveMovie(){
+    const myBookmarks = localStorage.getItem("@moviecatalog");
+    
+    let savedMovies = JSON.parse(myBookmarks) || [];
+
+    const hasMovie = savedMovies.some( (savedMovies) => savedMovies.id === movies.id)
+
+    if(hasMovie){
+      alert('This movie is already on bookmarks.');
+      return;
+    }
+
+    savedMovies.push(movies);
+    localStorage.setItem(("@moviecatalog"), JSON.stringify(savedMovies));
+    alert('Movie saved!')
+
+  }
 
   if (loading){
     return(
@@ -47,9 +68,9 @@ function Movie(){
       <strong>Rate: {movies.vote_average} / 10</strong>
 
       <div className="area-buttons">
-        <button>Save</button>
+        <button onClick={saveMovie}>Save</button>
         <button>
-          <a href="https://www.youtube.com/"> {/** Youtube link about the movie */}
+          <a href={`https://www.youtube.com/results?search_query=${movies.title} trailer`} target="_blank" rel="noreferrer"> {/** Youtube search about the movie */}
             Trailer
           </a>
         </button>
