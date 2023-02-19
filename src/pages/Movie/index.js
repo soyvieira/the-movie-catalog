@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from '../../services/api';
 import './movie.css';
+import { toast } from 'react-toastify';
 
 function Movie(){
   const {id} = useParams();
@@ -22,7 +23,6 @@ function Movie(){
         setLoading(false);
       })
       .catch( ()=>{
-        console.log("Movie not found");
         navigation('/', {replace: true});
         return
       })
@@ -40,13 +40,13 @@ function Movie(){
     const hasMovie = savedMovies.some( (savedMovies) => savedMovies.id === movies.id)
 
     if(hasMovie){
-      alert('This movie is already on bookmarks.');
+      toast.warn('This movie is already on bookmarks.');
       return;
     }
 
     savedMovies.push(movies);
     localStorage.setItem(("@moviecatalog"), JSON.stringify(savedMovies));
-    alert('Movie saved!')
+    toast.success('Movie saved!');
 
   }
 
